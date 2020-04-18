@@ -9,14 +9,6 @@ import (
 	"net/http"
 )
 
-type Color struct {
-	Green string
-	Red   string
-	End   string
-}
-
-var color Color = Color{"\x1b[32;1m", "\x1b[31;1m", "\x1b[m"}
-
 type Issue struct {
 	Title     string `json:"title"`
 	UpdatedAt string `json:"updated_at"`
@@ -48,10 +40,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Print("Recent activities\n\n")
-	printLine()
+	fmt.Print("GitHub Recent activities\n\n")
 	printEvents(events)
-	printLine()
 }
 
 func parseArgs() string {
@@ -60,49 +50,31 @@ func parseArgs() string {
 	return *username
 }
 
-func printLine() {
-	fmt.Println("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+")
-}
-
 func printEvents(events []Event) {
 	for _, event := range events {
 		switch event.EventType {
 		case "IssuesEvent":
-			printIssue(event)
+			printIssue(event, "[Issue]")
 		case "PullRequestEvent":
-			printPullRequest(event)
+			printPullRequest(event, "[PullRequest]")
 		}
 	}
 }
 
-func printIssue(event Event) {
-	var action string
-	if event.Payload.Action == "opened" {
-		action = color.Green + event.Payload.Action + color.End
-	} else if event.Payload.Action == "closed" {
-		action = color.Red + event.Payload.Action + color.End
-	}
+func printIssue(event Event, eventType string) {
 	fmt.Printf(
-		"+ updated at %s %s %s: %s\n",
-		event.Payload.Issue.UpdatedAt,
-		action,
-		event.EventType,
+		"%s %s\n%s\n\n",
+		event.Payload.Action,
+		eventType,
 		event.Payload.Issue.Title,
 	)
 }
 
-func printPullRequest(event Event) {
-	var action string
-	if event.Payload.Action == "opened" {
-		action = color.Green + event.Payload.Action + color.End
-	} else if event.Payload.Action == "closed" {
-		action = color.Red + event.Payload.Action + color.End
-	}
+func printPullRequest(event Event, eventType string) {
 	fmt.Printf(
-		"+ updated at %s %s %s:  %s\n",
-		event.Payload.PullRequest.UpdatedAt,
-		action,
-		event.EventType,
+		"%s %s\n%s\n\n",
+		event.Payload.Action,
+		eventType,
 		event.Payload.PullRequest.Title,
 	)
 }

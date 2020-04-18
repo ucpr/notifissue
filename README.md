@@ -1,26 +1,20 @@
 # notifissue
 指定したユーザーの直近のissue, pullreqのアクティビティを取得します.  
-shellの起動時に呼ばれるようにしておくと必ずチェックできていいと思います.  
+デスクトップの通知として表示させます.
 
-![notifissue run](https://user-images.githubusercontent.com/18340344/70629082-b3fd7780-1c6c-11ea-9b2b-f6773e8a2844.png)
+![notifissue run](image.png)
 
 ## Usage
 ### Install
 ```
-$ go get -u github.com/nemusou/notifissue
+$ go get -u github.com/ucpr/notifissue
 ```
 
-### for Fish
-add `config.fish` or any config file.
-```
-# notifissue
-set -x NOTIFISSUE_PATH "YOUR_NOTIFISSUE_PATH"
-# set -x NOTIFISSUE_PATH "/(home|Users)/YOUR_NAME/.go/bin/notifissue
-set -x NOTIFISSUE_USERNAME "nemusou"
-function _notifissue
-  for i in ($NOTIFISSUE_PATH -u=$NOTIFISSUE_USERNAME)
-    echo $i
-  end
-end
-_notifissue
+### requirements
+- `notify-send` command
+
+### for notify-send command
+add `.bash_profile` or any config file.
+```shell
+notify-send "`notifissue -u=username`"
 ```
